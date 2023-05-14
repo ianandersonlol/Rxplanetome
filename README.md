@@ -9,7 +9,7 @@ This document provides a brief overview and usage instructions for the given R s
 
 1. [Overview](#overview)
 2. [Dependencies](#dependencies)
-3. [Setting up your API Key](#setting-up-your-api-key)
+3. [Setting Up OpenAI Developer Account and API Key](#Setting-Up-OpenAI-Developer-Account-and-API-Key)
 4. [Selecting a file](#selecting-a-file)
 5. [Explain the code](#explain-the-code)
 6. [Usage](#usage)
@@ -32,8 +32,12 @@ install.packages("openai")
 install.packages("jsonlite")
 ```
 
-## Setting up your API Key
+## Setting Up OpenAI Developer Account and API Key
 
+1. Visit the OpenAI website at [https://www.openai.com/](https://www.openai.com/).
+2. Click on the "Sign Up" button and create an account.
+3. After verifying your email address and logging in, navigate to the API section.
+4. In the API section, you will find your API key. Copy this key and keep it safe; you'll need it for the next step.
 To use the OpenAI API, you need to have an API key. Replace `YOURAPIKEY` in the following line with your actual API key:
 
 ```R
