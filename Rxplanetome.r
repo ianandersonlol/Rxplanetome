@@ -1,15 +1,11 @@
-# Rxplanetome - Code explanation tool using AI
-# Required packages: openai, jsonlite, optparse, crayon, knitr
-# install.packages(c("openai", "jsonlite", "optparse", "crayon", "knitr"))
+install.packages(c("openai", "jsonlite", "optparse", "crayon", "knitr"))
 
-# Load the necessary libraries
 library(openai)
 library(jsonlite)
 library(optparse)
 library(crayon)
 library(knitr)
 
-# Display help information
 display_help <- function() {
   cat(bold("Rxplanetome - An R tool for explaining code using AI\n\n"))
   cat("Usage:\n")
@@ -26,7 +22,6 @@ display_help <- function() {
   cat("  Rscript Rxplanetome.r --file=script.R --model=gpt-4o --markdown --output=explanation.md\n\n")
 }
 
-# Progress indicator
 start_spinner <- function() {
   spinner_chars <- c("-", "\\", "|", "/")
   cat("\r", spinner_chars[1], " Generating explanation... ")
@@ -52,7 +47,6 @@ stop_spinner <- function(timer) {
   cat("\r                             \r")
 }
 
-# Command line arguments
 option_list <- list(
   make_option(c("--file"), type="character", default=NULL, 
               help="Path to the code file to explain"),
@@ -69,13 +63,11 @@ option_list <- list(
 opt_parser <- OptionParser(option_list=option_list)
 opt <- parse_args(opt_parser)
 
-# Show help if requested
 if (opt$help) {
   display_help()
   quit(save="no", status=0)
 }
 
-# Get API key from environment variable
 api_key <- Sys.getenv("OPENAI_API_KEY")
 if (api_key == "") {
   cat(red(bold("Error: OPENAI_API_KEY environment variable not set.\n")))
@@ -85,24 +77,19 @@ if (api_key == "") {
   quit(save="no", status=1)
 }
 
-# Set API key
 Sys.setenv(OPENAI_API_KEY = api_key)
 
-# Get the file path
 filename <- opt$file
 if (is.null(filename)) {
-  # If no file specified via command line, use interactive file selection
   cat(blue("No file specified. Please select a file using the file dialog.\n"))
   filename <- file.choose()
 }
 
-# Validate file exists
 if (!file.exists(filename)) {
   cat(red(bold("Error: File not found - ")), filename, "\n")
   quit(save="no", status=1)
 }
 
-# Read the file content
 code <- tryCatch(
   {
     readChar(filename, file.info(filename)$size)
@@ -113,7 +100,6 @@ code <- tryCatch(
   }
 )
 
-# Define a function to explain code
 explain_code <- function(code, model = "gpt-3.5-turbo") {
   chat_messages <- list(
     list(role = "system", content = "Your name is BinkyBonky and You are a knowledgeable AI trained to explain code to people."),
@@ -142,11 +128,9 @@ explain_code <- function(code, model = "gpt-3.5-turbo") {
   return(explanation)
 }
 
-# Generate the explanation
 cat(blue("Analyzing file: "), basename(filename), "\n")
 cat(blue("Using model: "), opt$model, "\n")
 
-# Start progress indicator if available
 timer <- NULL
 if (requireNamespace("later", quietly = TRUE)) {
   timer <- start_spinner()
@@ -154,23 +138,18 @@ if (requireNamespace("later", quietly = TRUE)) {
 
 explanation <- explain_code(code, model = opt$model)
 
-# Stop progress indicator
 if (!is.null(timer)) {
   stop_spinner(timer)
 }
 
-# Format and display the explanation
 if (opt$markdown) {
-  # Convert to markdown
   cat(blue(bold("\nExplanation (Markdown):\n\n")))
   cat(explanation, "\n")
 } else {
-  # Plain text output
   cat(green(bold("\nExplanation:\n\n")))
   cat(explanation, "\n")
 }
 
-# Save to file if requested
 if (!is.null(opt$output)) {
   output_file <- opt$output
   tryCatch(
