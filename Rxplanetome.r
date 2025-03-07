@@ -100,10 +100,10 @@ code <- tryCatch(
   }
 )
 
-explain_code <- function(code, model = "gpt-3.5-turbo") {
+explain_code <- function(code, filename, model = "gpt-3.5-turbo") {
   chat_messages <- list(
     list(role = "system", content = "Your name is BinkyBonky and You are a knowledgeable AI trained to explain code to people."),
-    list(role = "user", content = paste("Please explain the following code and how to use it:\n", code))
+    list(role = "user", content = paste("Please explain the following code from the file", basename(filename), "and how to use it:\n", code))
   )
   
   response <- tryCatch(
@@ -136,7 +136,7 @@ if (requireNamespace("later", quietly = TRUE)) {
   timer <- start_spinner()
 }
 
-explanation <- explain_code(code, model = opt$model)
+explanation <- explain_code(code, filename, model = opt$model)
 
 if (!is.null(timer)) {
   stop_spinner(timer)
